@@ -4,6 +4,8 @@ app_publisher = "Olatunji Samuel"
 app_description = "An App that helps IT managers control user\'s permissions and roles."
 app_email = "iamkomolafe.o.s@gmail.com"
 app_license = "mit"
+app_icon = "octicon octicon-people"
+app_color = "green"
 
 # Apps
 # ------------------
@@ -27,7 +29,7 @@ app_license = "mit"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/user_control_panel/css/user_control_panel.css"
 # Include JS files
-app_include_js = "/assets/user_control_panel/js/user_control_panel.js"
+app_include_js = ["/assets/user_control_panel/js/user_control_panel.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/user_control_panel/css/user_control_panel.css"
