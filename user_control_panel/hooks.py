@@ -26,7 +26,8 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/user_control_panel/css/user_control_panel.css"
-# app_include_js = "/assets/user_control_panel/js/user_control_panel.js"
+# Include JS files
+app_include_js = "/assets/user_control_panel/js/user_control_panel.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/user_control_panel/css/user_control_panel.css"
@@ -237,3 +238,28 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+
+# Auto-creation of DocTypes during installation
+fixtures = [
+	{
+		"dt": "DocType",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"User Control Panel",
+					"Control Panel Role",
+					"Control Panel Restriction",
+					"Control Panel Settings",
+				],
+			]
+		],
+	}
+]
+
+# API endpoints
+api_endpoints = {
+	"user_control_panel.user_control_panel.api.control_panel_role": {"methods": ["POST", "GET"]},
+	"user_control_panel.user_control_panel.api.reset_password": {"methods": ["POST", "GET"]},
+}

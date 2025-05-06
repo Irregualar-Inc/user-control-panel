@@ -1,0 +1,18 @@
+{
+    "name": "Control Panel Role",
+    "doctype": "DocType",
+    "istable": 1,
+    "editable_grid": 0,
+    "module": "User Control Panel",
+    "owner": "Administrator",
+    "fields": [
+        {
+            "fieldname": "role",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Role",
+            "reqd": 1,
+            "options": "Role"
+        }
+    ]
+}

@@ -1,0 +1,98 @@
+{
+    "name": "User Control Panel",
+    "doctype": "DocType",
+    "module": "User Control Panel",
+    "owner": "Administrator",
+    "is_submittable": 1,
+    "has_web_view": 1,
+    "allow_guest_to_view": 0,
+    "track_changes": 1,
+    "track_views": 1,
+    "is_virtual": 1,
+    "has_server_script": 1,
+    "client_script": 1,
+    "server_script_events": [
+        "before_insert",
+        "after_insert",
+        "before_validate",
+        "validate",
+        "before_save",
+        "after_save",
+        "before_submit",
+        "after_submit",
+        "before_cancel",
+        "after_cancel",
+        "before_delete",
+        "after_delete",
+        "before_update_after_submit",
+        "on_update_after_submit",
+        "on_update",
+        "on_trash"
+    ],
+    "client_script_events": [
+        "setup",
+        "onload",
+        "refresh",
+        "validate",
+        "before_save",
+        "after_save",
+        "before_submit",
+        "after_submit",
+        "before_cancel",
+        "after_cancel"
+    ],
+    "fields": [
+        {
+            "fieldname": "user",
+            "fieldtype": "Link",
+            "label": "User",
+            "reqd": 1,
+            "options": "User",
+            "unique": 1
+        },
+        {
+            "fieldname": "user_name",
+            "fieldtype": "Data",
+            "label": "User Name",
+            "fetch_from": "user.full_name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "section_break",
+            "fieldtype": "Section Break",
+            "label": "Role and Restrictions"
+        },
+        {
+            "fieldname": "roles",
+            "fieldtype": "Table MultiSelect",
+            "label": "Roles",
+            "options": "Control Panel Role",
+            "reqd": 1
+        },
+        {
+            "fieldname": "notes_html",
+            "fieldtype": "HTML",
+            "label": "",
+            "options": "<div class='alert alert-info'>Important: A restriction for Cost Center is required. (If user is not restricted by cost center, use central cost center, e.g: Main).</div>"
+        },
+        {
+            "fieldname": "restrictions",
+            "fieldtype": "Table",
+            "label": "Restrictions",
+            "options": "Control Panel Restriction",
+            "reqd": 1
+        }
+    ],
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ]
+}
