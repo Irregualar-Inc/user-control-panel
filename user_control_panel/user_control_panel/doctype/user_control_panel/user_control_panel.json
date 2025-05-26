@@ -3,14 +3,15 @@
     "doctype": "DocType",
     "module": "User Control Panel",
     "owner": "Administrator",
-    "is_submittable": 1,
-    "has_web_view": 1,
     "allow_guest_to_view": 0,
     "track_changes": 1,
     "track_views": 1,
-    "is_virtual": 1,
+    "is_virtual": 0,
     "has_server_script": 1,
     "client_script": 1,
+    "allow_rename": 0,
+    "naming_rule": "Expression",
+    "autoname": "format:{employee_name} - CP",
     "server_script_events": [
         "before_insert",
         "after_insert",
@@ -43,18 +44,26 @@
     ],
     "fields": [
         {
-            "fieldname": "user",
+            "fieldname": "employee",
             "fieldtype": "Link",
-            "label": "User",
+            "label": "Employee",
             "reqd": 1,
-            "options": "User",
+            "options": "Employee",
             "unique": 1
         },
         {
-            "fieldname": "user_name",
+            "fieldname": "employee_name",
             "fieldtype": "Data",
-            "label": "User Name",
-            "fetch_from": "user.full_name",
+            "label": "Employee Name",
+            "fetch_from": "employee.employee_name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "company",
+            "fieldtype": "Link",
+            "label": "Company",
+            "options": "Company",
+            "fetch_from": "employee.company",
             "read_only": 1
         },
         {
@@ -91,6 +100,16 @@
             "print": 1,
             "read": 1,
             "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "create": 0,
+            "delete": 0,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "IT Manager",
             "share": 1,
             "write": 1
         }

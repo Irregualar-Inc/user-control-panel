@@ -1,47 +1,54 @@
 {
- "actions": [],
- "creation": "2025-04-23 17:54:12.681254",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "advanced_control_section",
-  "allowed_roles"
- ],
- "fields": [
-  {
-   "fieldname": "allowed_roles",
-   "fieldtype": "Table MultiSelect",
-   "label": "Allowed Roles",
-   "options": "Control Panel Role",
-   "reqd": 1
-  },
-  {
-   "fieldname": "advanced_control_section",
-   "fieldtype": "Section Break",
-   "label": "Advanced Control"
-  }
- ],
- "issingle": 1,
- "links": [],
- "modified": "2025-04-24 03:00:18.528033",
- "modified_by": "Administrator",
- "module": "User Control Panel",
- "name": "Control Panel Settings",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "row_format": "Dynamic",
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": []
+    "actions": [],
+    "creation": "2025-04-23 17:54:12.681254",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "advanced_control_section",
+        "allowed_roles"
+    ],
+    "fields": [
+        {
+            "fieldname": "allowed_roles",
+            "fieldtype": "Table MultiSelect",
+            "label": "Allowed Roles",
+            "options": "Control Panel Role",
+            "reqd": 1
+        },
+        {
+            "fieldname": "advanced_control_section",
+            "fieldtype": "Section Break",
+            "label": "Advanced Control"
+        },
+        {
+            "fieldname": "employee_restrictions",
+            "fieldtype": "Table",
+            "label": "Default Employee Restrictions",
+            "options": "Control Panel Restriction",
+            "reqd": 1
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2025-04-24 03:00:18.528033",
+    "modified_by": "Administrator",
+    "module": "User Control Panel",
+    "name": "Control Panel Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "sort_field": "creation",
+    "sort_order": "DESC",
+    "states": []
 }

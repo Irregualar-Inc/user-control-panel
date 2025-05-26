@@ -46,7 +46,7 @@ app_include_js = ["/assets/user_control_panel/js/user_control_panel.js"]
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Employee": "public/js/employee_custom.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -89,7 +89,7 @@ app_include_js = ["/assets/user_control_panel/js/user_control_panel.js"]
 # ------------
 
 # before_install = "user_control_panel.install.before_install"
-# after_install = "user_control_panel.install.after_install"
+after_install = "user_control_panel.setup.installation.after_install"
 
 # Uninstallation
 # ------------
@@ -257,11 +257,15 @@ fixtures = [
 				],
 			]
 		],
-	}
+	},
+	{"doctype": "Role", "filters": [["name", "in", ["IT Manager"]]]},
+	{"doctype": "Custom Field", "filters": [["dt", "=", "Employee"]]},
 ]
 
 # API endpoints
 api_endpoints = {
 	"user_control_panel.user_control_panel.api.control_panel_role": {"methods": ["POST", "GET"]},
 	"user_control_panel.user_control_panel.api.reset_password": {"methods": ["POST", "GET"]},
+	"user_control_panel.user_control_panel.api.toggle_user_status": {"methods": ["POST", "GET"]},
+	"user_control_panel.user_control_panel.api.create_user_permissions": {"methods": ["POST", "GET"]},
 }
