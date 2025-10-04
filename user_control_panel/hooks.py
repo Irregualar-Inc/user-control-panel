@@ -259,7 +259,6 @@ fixtures = [
 		],
 	},
 	{"doctype": "Role", "filters": [["name", "in", ["IT Manager"]]]},
-	{"doctype": "Custom Field", "filters": [["dt", "=", "Employee"]]},
 ]
 
 # API endpoints

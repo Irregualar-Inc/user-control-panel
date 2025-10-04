@@ -4,6 +4,8 @@ import frappe
 def get_all_roles():
     excluded_roles = [
         "Administrator",
+        "Employee",
+        "Employee Self Service",
         "Accounts Manager",
         "System Manager",
         "Agriculture Manager",
@@ -34,6 +36,7 @@ def get_all_roles():
         "Marketplace Manager",
         "Newsletter Manager",
         "Workspace Manager",
+        "Whatsapp Manager",
     ]
 
     # Create a proper SQL IN clause with quoted items

@@ -50,9 +50,7 @@ frappe.ui.form.on("User Control Panel", {
 					employee: frm.doc.employee,
 				},
 				callback: function (response) {
-					console.log("api response: ", response);
 					if (response.message && response.message.length > 0) {
-						console.log("employee's roles: ", response.message);
 						const userRoles = response.message;
 						const allowedRoles = frm.doc.allowed_roles || [];
 						const filteredRoles = userRoles.filter((role) =>
@@ -88,23 +86,10 @@ frappe.ui.form.on("Control Panel Restriction", {
 function check_and_add_non_removable_row(frm) {
 	let restrictions = frm.doc.restrictions || [];
 	let cost_center_row = restrictions.find((row) => row.allow === "Cost Center");
-	let company_row = restrictions.find((row) => row.allow === "Company");
 
 	if (!cost_center_row) {
-		if (restrictions.length > 0 && !restrictions[0].allow) {
-			restrictions[0].allow = "Cost Center";
-		} else {
-			let new_row = frm.add_child("restrictions");
-			new_row.allow = "Cost Center";
-		}
-		frm.refresh_field("restrictions");
-	}
-
-	if (!company_row) {
 		let new_row = frm.add_child("restrictions");
-		new_row.allow = "Company";
-		restrictions[0].for_value = frm.doc.company;
-
+		new_row.allow = "Cost Center";
 		frm.refresh_field("restrictions");
 	}
 }
@@ -112,13 +97,9 @@ function check_and_add_non_removable_row(frm) {
 function validate_cost_center_exists(frm) {
 	let restrictions = frm.doc.restrictions || [];
 	let cost_center_row = restrictions.find((row) => row.allow === "Cost Center");
-	let company_row = restrictions.find((row) => row.allow === "Company");
 
 	if (!cost_center_row) {
 		frappe.throw(__("Please add 'Cost Center' restriction to the Restrictions table."));
-	}
-	if (!company_row) {
-		frappe.throw(__("Please add 'Company' restriction to the Restrictions table."));
 	}
 }
 

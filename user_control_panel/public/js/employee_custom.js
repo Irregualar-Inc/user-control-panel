@@ -17,6 +17,13 @@ frappe.ui.form.on("Employee", {
 	},
 
 	refresh: function (frm) {
+		frm.set_query("employee_cost_center", function() {
+			return {
+				filters: {
+						company: frm.doc.company
+				}
+			};
+		});
 		if (!frappe.user.has_role("System Manager")) {
 			frappe.meta.get_docfield("Employee", "create_user", frm.doc.name).hidden = 1;
 			frappe.meta.get_docfield(
@@ -156,6 +163,7 @@ function setupCreateUserButton(frm) {
 				middle_name: frm.doc.middle_name,
 				company: frm.doc.company,
 				employee_id: frm.doc.name,
+				cost_center: frm.doc.employee_cost_center,
 			},
 			callback: function () {
 				frappe.show_alert(__("User invited/linked successfully."));
