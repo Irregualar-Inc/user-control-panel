@@ -240,6 +240,13 @@ after_install = "user_control_panel.setup.installation.after_install"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+company_data_to_be_ignored = [
+    "Department",
+    "Leave Period",
+    "Payroll Period",
+    "Salary Structure"
+]
+
 
 # Auto-creation of DocTypes during installation
 fixtures = [
