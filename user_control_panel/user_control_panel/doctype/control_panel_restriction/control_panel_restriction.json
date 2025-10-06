@@ -1,87 +1,93 @@
 {
- "actions": [],
- "creation": "2025-04-24 03:47:05.059625",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "allow",
-  "for_value",
-  "column_break_nunk",
-  "is_default",
-  "advanced_control_section",
-  "apply_to_all_doctypes",
-  "applicable_for",
-  "column_break_twjc",
-  "hide_descendants"
- ],
- "fields": [
-  {
-   "fieldname": "allow",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Allow",
-   "options": "DocType",
-   "reqd": 1
-  },
-  {
-   "fieldname": "for_value",
-   "fieldtype": "Dynamic Link",
-   "in_list_view": 1,
-   "label": "For Value",
-   "options": "allow"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_default",
-   "fieldtype": "Check",
-   "label": "Is Default"
-  },
-  {
-   "default": "1",
-   "fieldname": "apply_to_all_doctypes",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Apply To All Document Types"
-  },
-  {
-   "fieldname": "applicable_for",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Applicable For",
-   "options": "DocType"
-  },
-  {
-   "default": "0",
-   "fieldname": "hide_descendants",
-   "fieldtype": "Check",
-"in_list_view": 1,
-   "label": "Hide Descendants"
-  },
-  {
-   "fieldname": "column_break_nunk",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "advanced_control_section",
-   "fieldtype": "Section Break",
-   "label": "Advanced Control"
-  },
-  {
-   "fieldname": "column_break_twjc",
-   "fieldtype": "Column Break"
-  }
- ],
- "istable": 1,
- "links": [],
- "modified": "2025-10-03 14:47:33.675345",
- "modified_by": "Administrator",
- "module": "User Control Panel",
- "name": "Control Panel Restriction",
- "owner": "Administrator",
- "permissions": [],
- "row_format": "Dynamic",
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": []
+   "actions": [],
+   "creation": "2025-04-24 03:47:05.059625",
+   "doctype": "DocType",
+   "editable_grid": 1,
+   "engine": "InnoDB",
+   "field_order": [
+      "allow",
+      "for_value",
+      "column_break_nunk",
+      "is_default",
+      "advanced_control_section",
+      "apply_to_all_doctypes",
+      "applicable_for",
+      "column_break_twjc",
+      "hide_descendants"
+   ],
+   "fields": [
+      {
+         "fieldname": "allow",
+         "fieldtype": "Link",
+         "in_list_view": 1,
+         "label": "Allow",
+         "options": "DocType",
+         "reqd": 1
+      },
+      {
+         "fieldname": "for_value",
+         "fieldtype": "Dynamic Link",
+         "in_list_view": 1,
+         "label": "For Value",
+         "options": "allow"
+      },
+      {
+         "fieldname": "required",
+         "fieldtype": "Check",
+         "in_list_view": 1,
+         "label": "Required"
+      },
+      {
+         "default": "0",
+         "fieldname": "is_default",
+         "fieldtype": "Check",
+         "label": "Is Default"
+      },
+      {
+         "default": "1",
+         "fieldname": "apply_to_all_doctypes",
+         "fieldtype": "Check",
+         "in_list_view": 1,
+         "label": "Apply To All Document Types"
+      },
+      {
+         "fieldname": "applicable_for",
+         "fieldtype": "Link",
+         "in_list_view": 1,
+         "label": "Applicable For",
+         "options": "DocType"
+      },
+      {
+         "default": "0",
+         "fieldname": "hide_descendants",
+         "fieldtype": "Check",
+         "in_list_view": 1,
+         "label": "Hide Descendants"
+      },
+      {
+         "fieldname": "column_break_nunk",
+         "fieldtype": "Column Break"
+      },
+      {
+         "fieldname": "advanced_control_section",
+         "fieldtype": "Section Break",
+         "label": "Advanced Control"
+      },
+      {
+         "fieldname": "column_break_twjc",
+         "fieldtype": "Column Break"
+      }
+   ],
+   "istable": 1,
+   "links": [],
+   "modified": "2025-10-03 14:47:33.675345",
+   "modified_by": "Administrator",
+   "module": "User Control Panel",
+   "name": "Control Panel Restriction",
+   "owner": "Administrator",
+   "permissions": [],
+   "row_format": "Dynamic",
+   "sort_field": "creation",
+   "sort_order": "DESC",
+   "states": []
 }

@@ -242,11 +242,9 @@ after_install = "user_control_panel.setup.installation.after_install"
 
 company_data_to_be_ignored = [
     "Department",
-    "Leave Period",
-    "Payroll Period",
-    "Salary Structure"
+    "Expense Claim Account",
+    "Expense Claim Type"
 ]
-
 
 # Auto-creation of DocTypes during installation
 fixtures = [

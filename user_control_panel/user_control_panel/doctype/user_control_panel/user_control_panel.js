@@ -38,16 +38,12 @@ frappe.ui.form.on("User Control Panel", {
 		check_and_add_non_removable_row(frm);
 	},
 
-	validate: function (frm) {
-		validate_cost_center_exists(frm);
-	},
-
-	employee: function (frm) {
+	user: function (frm) {
 		if (frm.doc.user) {
 			frappe.call({
 				method: "user_control_panel.user_control_panel.api.control_panel_role",
 				args: {
-					employee: frm.doc.employee,
+					user: frm.doc.user,
 				},
 				callback: function (response) {
 					if (response.message && response.message.length > 0) {
@@ -70,10 +66,48 @@ frappe.ui.form.on("User Control Panel", {
 					}
 				},
 			});
+			frappe.call({
+				method: "user_control_panel.user_control_panel.api.control_panel_restrictions",
+				args: {
+					user: frm.doc.user,
+				},
+				callback: function (response) {
+					if (response.message && response.message.length > 0) {
+						const userRestrictions = response.message;
+
+						frm.clear_table("restrictions");
+
+						userRestrictions.forEach((restriction) => {
+							const child = frm.add_child("restrictions");
+							child.allow = restriction.allow;
+							child.for_value = restriction.for_value;
+							child.is_default = restriction.is_default;
+							child.apply_to_all_doctypes = restriction.apply_to_all_doctypes;
+							child.applicable_for = restriction.applicable_for;
+							child.hide_descendants = restriction.hide_descendants;
+						});
+
+						frm.refresh_field("restrictions");
+						check_and_add_non_removable_row(frm);
+					} else {
+						console.error(
+							"No restrictions found for the employee or invalid response"
+						);
+					}
+				},
+			});
 		} else {
-			frm.clear_table("roles");
-			frm.refresh_field("roles");
+			frm.clear_table("restrictions");
+			frm.refresh_field("restrictions");
 		}
+	},
+
+	restrictions_add: function (frm, cdt, cdn) {
+		check_and_add_non_removable_row(frm);
+	},
+
+	restrictions_remove: function (frm, cdt, cdn) {
+		check_and_add_non_removable_row(frm);
 	},
 });
 
@@ -84,23 +118,38 @@ frappe.ui.form.on("Control Panel Restriction", {
 });
 
 function check_and_add_non_removable_row(frm) {
-	let restrictions = frm.doc.restrictions || [];
-	let cost_center_row = restrictions.find((row) => row.allow === "Cost Center");
+	frappe.call({
+		method: "user_control_panel.user_control_panel.api.control_panel_default_restrictions",
+		callback: function (response) {
+			console.log("Response from server:", response);
+			if (response.message && response.message.length > 0) {
+				const defaultRestrictions = response.message;
 
-	if (!cost_center_row) {
-		let new_row = frm.add_child("restrictions");
-		new_row.allow = "Cost Center";
-		frm.refresh_field("restrictions");
-	}
-}
+				defaultRestrictions.forEach((restriction) => {
+					existing_restriction = frm.doc.restrictions.find(
+						(r) => r.allow === restriction.allow
+					);
+					if (existing_restriction) {
+						return;
+					} else {
+						const child = frm.add_child("restrictions");
+						child.allow = restriction.allow;
+						child.for_value = restriction.for_value;
+						child.is_default = restriction.is_default;
+						child.apply_to_all_doctypes = restriction.apply_to_all_doctypes;
+						child.applicable_for = restriction.applicable_for;
+						child.hide_descendants = restriction.hide_descendants;
+						child.required = restriction.required;
+					}
+				});
 
-function validate_cost_center_exists(frm) {
-	let restrictions = frm.doc.restrictions || [];
-	let cost_center_row = restrictions.find((row) => row.allow === "Cost Center");
-
-	if (!cost_center_row) {
-		frappe.throw(__("Please add 'Cost Center' restriction to the Restrictions table."));
-	}
+				frm.refresh_field("restrictions");
+			} else if (frm.doc.restrictions.length === 0) {
+				frm.clear_table("restrictions");
+				frm.refresh_field("restrictions");
+			}
+		},
+	});
 }
 
 function reset_user_password(frm) {
@@ -112,7 +161,7 @@ function reset_user_password(frm) {
 	frappe.call({
 		method: "user_control_panel.user_control_panel.api.reset_password",
 		args: {
-			employee: frm.doc.employee,
+			user: frm.doc.user,
 		},
 		callback: function (response) {
 			if (response.message) {

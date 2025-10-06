@@ -48,7 +48,7 @@ def get_all_roles():
     return [r[0] for r in frappe.db.sql(query)]
 
 
-def setup_default_employee_restrictions():
+def setup_default_user_restrictions():
     """Set up default employee restrictions during app installation"""
     # Check if Control Panel Settings already exists
     if not frappe.db.exists("DocType", "Control Panel Settings"):
@@ -56,30 +56,8 @@ def setup_default_employee_restrictions():
 
     # Document types that have employee fields
     document_types = [
-        "Salary Slip",
-        "Employee Benefit Application",
-        "Expense Claim",
-        "Employee Advance",
-        "Leave Application",
-        "Attendance Request",
-        "Compensatory Leave Request",
-        "Employee Tax Exemption Declaration",
-        "Employee Tax Exemption Proof Submission",
-        "Timesheet",
-        "Training Feedback",
-        "Employee Checkin",
-        "Shift Request",
-        "Employee Grievance",
-        "Employee Referral",
-        "Travel Request",
-        "Delivery Trip",
-        "Attendance",
-        "Employee Health Insurance",
-        "Additional Salary",
-        "Payroll Entry",
-        "Leave Allocation",
-        "Vehicle Log",
-        "Job Applicant",
+        "Cost Center",
+        "Employee",
     ]
 
     try:
@@ -89,9 +67,7 @@ def setup_default_employee_restrictions():
 
             # Create sets of existing roles and restrictions to avoid duplicates
             existing_roles = {d.role for d in doc.get("allowed_roles", [])}
-            existing_restrictions = {
-                d.applicable_for for d in doc.get("employee_restrictions", [])
-            }
+            existing_restrictions = {d.allow for d in doc.get("user_restrictions", [])}
 
             # Add missing roles
             roles = get_all_roles()
@@ -103,18 +79,17 @@ def setup_default_employee_restrictions():
             for doc_type in document_types:
                 if doc_type not in existing_restrictions:
                     restriction = {
-                        "allow": "Employee",
+                        "allow": doc_type,
                         "for_value": "",  # Empty string instead of None
-                        "is_default": 1,
-                        "apply_to_all_doctypes": 0,
-                        "applicable_for": doc_type,
-                        "hide_descendants": 1 if doc_type == "Salary Slip" else 0,
+                        "is_default": 0,
+                        "apply_to_all_doctypes": 1,
+                        "required": 0 if doc_type == "Employee" else 1,
                     }
-                    doc.append("employee_restrictions", restriction)
+                    doc.append("user_restrictions", restriction)
 
             # Save changes if any were made
             if len(doc.get("allowed_roles", [])) > len(existing_roles) or len(
-                doc.get("employee_restrictions", [])
+                doc.get("user_restrictions", [])
             ) > len(existing_restrictions):
                 doc.save(ignore_permissions=True)
                 frappe.db.commit()
@@ -131,14 +106,13 @@ def setup_default_employee_restrictions():
             # Add restrictions
             for doc_type in document_types:
                 restriction = {
-                    "allow": "Employee",
+                    "allow": doc_type,
                     "for_value": "",  # Empty string instead of None
                     "is_default": 1,
-                    "apply_to_all_doctypes": 0,
-                    "applicable_for": doc_type,
-                    "hide_descendants": 1 if doc_type == "Salary Slip" else 0,
+                    "apply_to_all_doctypes": 1,
+                    "required": 0 if doc_type == "Employee" else 1,
                 }
-                doc.append("employee_restrictions", restriction)
+                doc.append("user_restrictions", restriction)
 
             # Insert the new document
             doc.insert(ignore_permissions=True)
@@ -152,4 +126,4 @@ def setup_default_employee_restrictions():
 
 def after_install():
     """Run after app installation"""
-    setup_default_employee_restrictions()
+    setup_default_user_restrictions()

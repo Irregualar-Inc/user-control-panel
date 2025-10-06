@@ -17,11 +17,11 @@ frappe.ui.form.on("Employee", {
 	},
 
 	refresh: function (frm) {
-		frm.set_query("employee_cost_center", function() {
+		frm.set_query("employee_cost_center", function () {
 			return {
 				filters: {
-						company: frm.doc.company
-				}
+					company: frm.doc.company,
+				},
 			};
 		});
 		if (!frappe.user.has_role("System Manager")) {
@@ -36,7 +36,7 @@ frappe.ui.form.on("Employee", {
 		}
 		if (!frm.doc.__islocal) {
 			if (frappe.user.has_role("HR Manager")) {
-				if (!frm.doc.user_id && frm.status !== "Active") {
+				if (!frm.doc.user_id && frm.status !== "Active" && frappe.user === frm.doc.company_email) {
 					setupCreateUserButton(frm);
 				}
 				frm.doc.__ignore_user_status = true;
@@ -152,6 +152,10 @@ function setupCreateUserButton(frm) {
 			frappe.throw(__('Please set "Company Email".'));
 		}
 
+		if (frappe.user === frm.doc.company_email) {
+			frappe.throw(__('You cannot invite yourself'))
+		}
+
 		frappe.dom.freeze(__("Inviting/Linking User..."));
 
 		frappe.call({
@@ -161,7 +165,6 @@ function setupCreateUserButton(frm) {
 				first_name: frm.doc.first_name,
 				last_name: frm.doc.last_name,
 				middle_name: frm.doc.middle_name,
-				company: frm.doc.company,
 				employee_id: frm.doc.name,
 				cost_center: frm.doc.employee_cost_center,
 			},
