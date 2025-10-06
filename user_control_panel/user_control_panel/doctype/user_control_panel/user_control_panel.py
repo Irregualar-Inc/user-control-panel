@@ -17,6 +17,7 @@ class UserControlPanel(Document):
                     "applicable_for": r.applicable_for,
                     "hide_descendants": r.hide_descendants,
                 })
+        print(f"data for restrictions: {restrictions_data}")
         frappe.enqueue(
             method="user_control_panel.utils.sync_permissions_async",
             queue="short",

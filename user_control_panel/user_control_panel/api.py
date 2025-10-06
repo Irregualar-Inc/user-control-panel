@@ -55,6 +55,7 @@ def control_panel_restrictions():
         for restriction in restrictions
     ]
 
+
 @frappe.whitelist()
 def control_panel_default_restrictions():
     """
@@ -149,6 +150,7 @@ def create_user_permissions():
     email = frappe.form_dict.get("email")
     employee_id = frappe.form_dict.get("employee_id")
     cost_center = frappe.form_dict.get("cost_center")
+    company = frappe.form_dict.get("company")
     if not employee_id:
         frappe.throw(_("Employee ID is required."))
 
@@ -169,7 +171,7 @@ def create_user_permissions():
             user_doc = frappe.get_doc("User", email)
         if "Employee" not in frappe.get_roles(user_doc.name):
             user_doc.add_roles("Employee")
-        _create_user_permissions(user_doc.name, employee_id, cost_center)
+        _create_user_permissions(user_doc.name, employee_id, cost_center, company)
         frappe.db.commit()
         return _("Employee role assigned successfully.")
     except Exception as e:
@@ -177,7 +179,9 @@ def create_user_permissions():
         frappe.throw(_("Failed to create user permissions. Please try again."))
 
 
-def _create_user_permissions(user_id: str, employee_id: str, cost_center: str) -> None:
+def _create_user_permissions(
+    user_id: str, employee_id: str, cost_center: str, company: str
+) -> None:
     """
     Assign default 'Employee' role to a new user and set up their permissions.
     Args:
@@ -223,7 +227,11 @@ def _create_user_permissions(user_id: str, employee_id: str, cost_center: str) -
                             else (
                                 cost_center
                                 if restriction.allow == "Cost Center"
-                                else restriction.for_value or ""
+                                else (
+                                    company
+                                    if restriction.allow == "Company"
+                                    else restriction.for_value or ""
+                                )
                             )
                         ),
                         "is_default": restriction.is_default,

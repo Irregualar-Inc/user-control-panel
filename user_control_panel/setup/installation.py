@@ -58,6 +58,7 @@ def setup_default_user_restrictions():
     document_types = [
         "Cost Center",
         "Employee",
+        "Company",
     ]
 
     try:

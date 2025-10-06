@@ -35,7 +35,9 @@ frappe.ui.form.on("User Control Panel", {
 				console.error("Error fetching roles:", error);
 			},
 		});
-		check_and_add_non_removable_row(frm);
+		if (frm.doc.__islocal) {
+			check_and_add_non_removable_row(frm, true);
+		}
 	},
 
 	user: function (frm) {
@@ -88,7 +90,7 @@ frappe.ui.form.on("User Control Panel", {
 						});
 
 						frm.refresh_field("restrictions");
-						check_and_add_non_removable_row(frm);
+						check_and_add_non_removable_row(frm, true);
 					} else {
 						console.error(
 							"No restrictions found for the employee or invalid response"
@@ -117,7 +119,7 @@ frappe.ui.form.on("Control Panel Restriction", {
 	},
 });
 
-function check_and_add_non_removable_row(frm) {
+function check_and_add_non_removable_row(frm, new_form=false) {
 	frappe.call({
 		method: "user_control_panel.user_control_panel.api.control_panel_default_restrictions",
 		callback: function (response) {
@@ -129,7 +131,7 @@ function check_and_add_non_removable_row(frm) {
 					existing_restriction = frm.doc.restrictions.find(
 						(r) => r.allow === restriction.allow
 					);
-					if (existing_restriction) {
+					if (existing_restriction || (new_form && !restriction.required)) {
 						return;
 					} else {
 						const child = frm.add_child("restrictions");

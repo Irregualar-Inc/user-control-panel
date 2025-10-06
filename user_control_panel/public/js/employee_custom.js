@@ -167,6 +167,7 @@ function setupCreateUserButton(frm) {
 				middle_name: frm.doc.middle_name,
 				employee_id: frm.doc.name,
 				cost_center: frm.doc.employee_cost_center,
+				company: frm.doc.company,
 			},
 			callback: function () {
 				frappe.show_alert(__("User invited/linked successfully."));

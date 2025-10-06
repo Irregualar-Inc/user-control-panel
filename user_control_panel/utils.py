@@ -32,10 +32,6 @@ def sync_permissions_async(employee_user_id, restrictions):
             }
         )
 
-        # Skip company-level perms
-        if perm_data["allow"] == "Company":
-            continue
-
         key = (
             perm_data["user"],
             perm_data["allow"],
@@ -52,7 +48,7 @@ def sync_permissions_async(employee_user_id, restrictions):
     # Fetch all relevant existing permissions for this user
     existing_perms = frappe.get_all(
         "User Permission",
-        filters={"user": employee_user_id, "allow": ["!=", "Company"]},
+        filters={"user": employee_user_id},
         fields=[
             "name",
             "user",
@@ -71,15 +67,11 @@ def sync_permissions_async(employee_user_id, restrictions):
         existing_map[key] = p
 
     desired_keys = set(desired_map.keys())
-    existing_keys = set(existing_map.keys())
-
-    print(f"existing map: {existing_map}")
 
     changed = False  # flag to avoid unnecessary commits
 
     # --- Upsert (update or create) ---
     for key, perm_data in desired_map.items():
-        print(f"key: {key} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         existing = existing_map.get(key)
         if existing:
             # Check for differences before saving (idempotent)
@@ -105,7 +97,6 @@ def sync_permissions_async(employee_user_id, restrictions):
             )
             try:
                 new_doc.insert()
-                print(f"new doc: {new_doc.name}  >>>>>>>>>>>>>>>>>>")
                 changed = True
             except frappe.DuplicateEntryError:
                 ...
@@ -113,9 +104,6 @@ def sync_permissions_async(employee_user_id, restrictions):
     # --- Delete permissions no longer desired ---
     for key, existing in existing_map.items():
         if key not in desired_keys:
-            if key[1] == "Company":
-                continue
-            print("deleting >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             frappe.delete_doc("User Permission", existing.name, ignore_permissions=True)
             changed = True
 
