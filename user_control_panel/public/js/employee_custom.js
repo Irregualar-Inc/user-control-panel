@@ -36,7 +36,11 @@ frappe.ui.form.on("Employee", {
 		}
 		if (!frm.doc.__islocal) {
 			if (frappe.user.has_role("HR Manager")) {
-				if (!frm.doc.user_id && frm.status !== "Active" && frappe.user === frm.doc.company_email) {
+				if (
+					!frm.doc.user_id &&
+					frm.doc.status === "Active" &&
+					frappe.session.user !== frm.doc.company_email
+				) {
 					setupCreateUserButton(frm);
 				}
 				frm.doc.__ignore_user_status = true;
@@ -152,8 +156,8 @@ function setupCreateUserButton(frm) {
 			frappe.throw(__('Please set "Company Email".'));
 		}
 
-		if (frappe.user === frm.doc.company_email) {
-			frappe.throw(__('You cannot invite yourself'))
+		if (frappe.session.user === frm.doc.company_email) {
+			frappe.throw(__("You cannot invite yourself"));
 		}
 
 		frappe.dom.freeze(__("Inviting/Linking User..."));

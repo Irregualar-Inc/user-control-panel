@@ -8,6 +8,23 @@ frappe.ui.form.on("User Control Panel", {
 			}
 		}
 	},
+	company: function (frm) {
+		if (!frm.doc.company) return;
+
+		const newCompany = frm.doc.company;
+		let updated = false;
+
+		(frm.doc.restrictions || []).forEach((row) => {
+			if (row.allow === "Company") {
+				row.for_value = newCompany;
+				updated = true;
+			}
+		});
+
+		if (updated) {
+			frm.refresh_field("restrictions");
+		}
+	},
 	onload: function (frm) {
 		frappe.call({
 			method: "frappe.client.get",
@@ -36,7 +53,11 @@ frappe.ui.form.on("User Control Panel", {
 			},
 		});
 		if (frm.doc.__islocal) {
-			check_and_add_non_removable_row(frm, true);
+			if (frm.doc.restrictions && frm.doc.restrictions.length > 0) {
+				frm.doc.restrictions = frm.doc.restrictions.filter((r) => r.allow);
+				frm.refresh_field("restrictions");
+			}
+			check_and_add_non_removable_row(frm);
 		}
 	},
 
@@ -90,7 +111,7 @@ frappe.ui.form.on("User Control Panel", {
 						});
 
 						frm.refresh_field("restrictions");
-						check_and_add_non_removable_row(frm, true);
+						check_and_add_non_removable_row(frm);
 					} else {
 						console.error(
 							"No restrictions found for the employee or invalid response"
@@ -104,26 +125,44 @@ frappe.ui.form.on("User Control Panel", {
 		}
 	},
 
-	restrictions_add: function (frm, cdt, cdn) {
-		check_and_add_non_removable_row(frm);
-	},
+	validate: function (frm) {
+		return frappe.call({
+			method: "user_control_panel.user_control_panel.api.control_panel_default_restrictions",
+			callback: function (response) {
+				if (!response.message || response.message.length === 0) return;
 
-	restrictions_remove: function (frm, cdt, cdn) {
-		check_and_add_non_removable_row(frm);
+				const defaults = response.message;
+				const missingRequired = [];
+
+				defaults.forEach((restriction) => {
+					const exists = frm.doc.restrictions.some((r) => r.allow === restriction.allow);
+
+					// Only act on required ones
+					if (restriction.required && !exists) {
+						const child = frm.add_child("restrictions");
+						Object.assign(child, restriction);
+						missingRequired.push(restriction.allow);
+					}
+				});
+
+				if (missingRequired.length > 0) {
+					frm.refresh_field("restrictions");
+					frappe.throw(
+						`The following required restrictions were missing and have been re-added:<br><b>${missingRequired.join(
+							", "
+						)}</b><br><br>Please review and save again.`
+					);
+				}
+			},
+		});
 	},
 });
 
-frappe.ui.form.on("Control Panel Restriction", {
-	allow: function (frm, cdt, cdn) {
-		check_and_add_non_removable_row(frm);
-	},
-});
 
-function check_and_add_non_removable_row(frm, new_form=false) {
+function check_and_add_non_removable_row(frm) {
 	frappe.call({
 		method: "user_control_panel.user_control_panel.api.control_panel_default_restrictions",
 		callback: function (response) {
-			console.log("Response from server:", response);
 			if (response.message && response.message.length > 0) {
 				const defaultRestrictions = response.message;
 
@@ -131,12 +170,15 @@ function check_and_add_non_removable_row(frm, new_form=false) {
 					existing_restriction = frm.doc.restrictions.find(
 						(r) => r.allow === restriction.allow
 					);
-					if (existing_restriction || (new_form && !restriction.required)) {
+					if (existing_restriction) {
 						return;
 					} else {
 						const child = frm.add_child("restrictions");
 						child.allow = restriction.allow;
-						child.for_value = restriction.for_value;
+						child.for_value =
+							restriction.allow === "Company"
+								? frm.doc.company
+								: restriction.for_value;
 						child.is_default = restriction.is_default;
 						child.apply_to_all_doctypes = restriction.apply_to_all_doctypes;
 						child.applicable_for = restriction.applicable_for;

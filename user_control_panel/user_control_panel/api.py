@@ -212,6 +212,7 @@ def _create_user_permissions(
 
             # Add default role (Employee)
             user_control_panel.append("roles", {"role": "Desk User"})
+            user_control_panel.company = company
 
             control_panel_settings = frappe.get_doc("Control Panel Settings")
 

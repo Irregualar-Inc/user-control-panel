@@ -246,26 +246,6 @@ company_data_to_be_ignored = [
     "Expense Claim Type"
 ]
 
-# Auto-creation of DocTypes during installation
-fixtures = [
-	{
-		"dt": "DocType",
-		"filters": [
-			[
-				"name",
-				"in",
-				[
-					"User Control Panel",
-					"Control Panel Role",
-					"Control Panel Restriction",
-					"Control Panel Settings",
-				],
-			]
-		],
-	},
-	{"doctype": "Role", "filters": [["name", "in", ["IT Manager"]]]},
-]
-
 # API endpoints
 api_endpoints = {
 	"user_control_panel.user_control_panel.api.control_panel_role": {"methods": ["POST", "GET"]},
