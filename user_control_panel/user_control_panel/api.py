@@ -127,7 +127,7 @@ def toggle_user_status():
         frappe.db.set_value(
             "Employee",
             employee_doc_id,
-            "custom_user_enabled",
+            "user_enabled",
             new_status,
             update_modified=False,
         )

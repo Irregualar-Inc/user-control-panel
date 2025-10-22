@@ -122,6 +122,7 @@ frappe.ui.form.on("User Control Panel", {
 		} else {
 			frm.clear_table("restrictions");
 			frm.refresh_field("restrictions");
+			check_and_add_non_removable_row(frm);
 		}
 	},
 
