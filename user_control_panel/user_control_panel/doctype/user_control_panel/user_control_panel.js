@@ -127,6 +127,8 @@ frappe.ui.form.on("User Control Panel", {
 	},
 
 	validate: function (frm) {
+		frappe.validated = false;
+
 		return frappe.call({
 			method: "user_control_panel.user_control_panel.api.control_panel_default_restrictions",
 			callback: function (response) {
@@ -135,10 +137,10 @@ frappe.ui.form.on("User Control Panel", {
 				const defaults = response.message;
 				const missingRequired = [];
 
+				// --- 1️⃣ Check and add missing required restrictions ---
 				defaults.forEach((restriction) => {
 					const exists = frm.doc.restrictions.some((r) => r.allow === restriction.allow);
 
-					// Only act on required ones
 					if (restriction.required && !exists) {
 						const child = frm.add_child("restrictions");
 						Object.assign(child, restriction);
@@ -146,6 +148,36 @@ frappe.ui.form.on("User Control Panel", {
 					}
 				});
 
+				// --- 2️⃣ Check for duplicate defaults for the same "allow" ---
+				const duplicates = {};
+				frm.doc.restrictions.forEach((r) => {
+					if (r.is_default) {
+						if (!duplicates[r.allow]) {
+							duplicates[r.allow] = [];
+						}
+						duplicates[r.allow].push(r);
+					}
+				});
+
+				console.log(`Duplicates:`, duplicates);
+
+				const invalid_allows = Object.keys(duplicates).filter(
+					(allow) => duplicates[allow].length > 1
+				);
+
+				console.log(`Invalid Allows:`, invalid_allows);
+
+				if (invalid_allows.length > 0) {
+					console.log(`Throwing error for invalid allows`);
+					frappe.throw(
+						`Multiple <b>default</b> restrictions found for:<br><b>${invalid_allows.join(
+							", "
+						)}</b><br><br>Please keep only one default per restriction type.`
+					);
+					return;
+				}
+
+				// --- 3️⃣ Handle missing required restrictions ---
 				if (missingRequired.length > 0) {
 					frm.refresh_field("restrictions");
 					frappe.throw(
@@ -153,7 +185,10 @@ frappe.ui.form.on("User Control Panel", {
 							", "
 						)}</b><br><br>Please review and save again.`
 					);
+					return;
 				}
+
+				frappe.validated = true;
 			},
 		});
 	},
